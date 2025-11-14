@@ -10,6 +10,17 @@ data = {'name': 'John', 'age': 25}
 # print(data.get('city', 'gg'))  # ได้: 'gg' , (ค่า default)
 
 
-test = {'date': '2025-11-14', 'time': '10:00', 'PM25':{'color_id': '1', 'aqi': '12', 'value': '7.3'}}
 
-print(test.get('PM25').get('aqi'))
+import requests
+import pandas as pd
+pd.set_option('display.width', None)
+pd.set_option('display.max_columns', None)
+
+url = "http://air4thai.pcd.go.th/services/getNewAQI_JSON.php"
+data = requests.get(url).json()
+
+stations = data['stations']
+
+df = pd.json_normalize(stations)
+df['province'] = df['areaEN'].str.split(', ').str[-1]
+print(df['province'].unique())
