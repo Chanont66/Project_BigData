@@ -13,7 +13,7 @@ df = pd.json_normalize(stations)
 
 
 
-
+# ปรับข้อมูล (แก้ชื่อจังหวัดที่เขียนผิด, ลบช่องว่าง, แปลง Text เป็นเลข)
 def clean_data(df):
     # แยกข้อความด้วย , จะได้ list
     province_split = df['areaEN'].str.split(', ') 
@@ -37,8 +37,8 @@ def clean_data(df):
     # ใช้ replace แก้ชื่อที่เขียนมาแปลกๆ
     df["province_clean"] = province_clean.replace(province_check)
 
-    # แปลง Text ของ pm เป็นเลข
-    df["pm25_number"] = df["AQILast.PM25.value"].astype(float)
+    # แปลง Text ของค่า pm เป็นเลข
+    df["AQILast.PM25.value"] = df["AQILast.PM25.value"].astype(float)
     
     # (เช็ตว่าครบ 77 จังหวัดไหม?)
     # print(df['province_clean'].unique())
@@ -46,12 +46,14 @@ def clean_data(df):
 
 
 # print(clean_data(df))
-
-
-
-
-
 # ดูแถวแรกว่ามีกี่คอลัมน์
-print(stations[0].keys())
-# (['stationID', 'nameTH', 'nameEN', 'areaTH', 'areaEN', 
-# 'stationType', 'lat', 'long', 'forecast', 'AQILast'])
+# print(stations[0].keys())
+
+
+# หาค่าเฉลี่ย ค่า pm25 ของแต่ละจังหวัด
+def findmean(df):
+    result = df.groupby('province_clean')['AQILast.PM25.value'].mean().sort_values()
+    return result
+
+
+# print(findmean(clean_data(df)))
