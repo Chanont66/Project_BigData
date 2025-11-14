@@ -22,5 +22,22 @@ data = requests.get(url).json()
 stations = data['stations']
 
 df = pd.json_normalize(stations)
-df['province'] = df['areaEN'].str.split(', ').str[-1]
+df['province'] = df['areaEN'].str.split(', ').str[-1].str.strip()
+
+
+
+province_map = {
+    "Chon buri": "Chon Buri",
+    "Mueang Ang Thong District Ang Thong Province": "Ang Thong",
+    "Pattanee": "Pattani",
+    "Suphun Buri": "Suphan Buri",
+    "Chang Wat Phetchaburi": "Phetchaburi",
+    "Phra Nakhon Si Ayutthaya": "Ayutthaya",
+    "Samut Prakan\xa0": "Samut Prakan",
+}
+
+# ใช้ mapping แก้ชื่อ
+df["province"] = df["province_raw"].replace(province_map)
+
+
 print(df['province'].unique())
