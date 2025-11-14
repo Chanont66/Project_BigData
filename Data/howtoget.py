@@ -25,8 +25,7 @@ df = pd.json_normalize(stations)
 df['province_raw'] = df['areaEN'].str.split(', ').str[-1].str.strip()
 
 
-
-province_map = {
+province_check = {
     "Chon buri": "Chon Buri",
     "Mueang Ang Thong District Ang Thong Province": "Ang Thong",
     "Pattanee": "Pattani",
@@ -36,5 +35,5 @@ province_map = {
 }
 
 # ใช้ mapping แก้ชื่อที่เขียนมาแปลกๆ
-df["province_clean"] = df["province_raw"].replace(province_map)
+df["province_clean"] = df["province_raw"].replace(province_check)
 print(df['province_clean'].unique())
