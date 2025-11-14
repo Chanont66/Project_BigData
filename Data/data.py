@@ -1,10 +1,9 @@
 # !pip install pandas
 import pandas as pd
-import json
+import requests
 
-with open('D:/ProjectOnGit/Project_BigData/Data/air4thai.json', 'r', encoding='utf-8') as file:
-    data = json.load(file)
-
+url = "http://air4thai.pcd.go.th/services/getNewAQI_JSON.php"
+data = requests.get(url).json()
 # ข้อมูลอยู่ใน stations
 stations = data['stations']
 
@@ -14,12 +13,5 @@ stations = data['stations']
 # print(stations[0].keys())
 # (['stationID', 'nameTH', 'nameEN', 'areaTH', 'areaEN', 'stationType', 'lat', 'long', 'forecast', 'AQILast'])
 
-df_aqi = pd.json_normalize(data["AQILast"])
-
-
-tabel = []
-for i in range(len(stations)):
-    tabel.append(stations[i]+df_aqi[i])
-
-df = pd.DataFrame(tabel)
+df = pd.json_normalize(stations)
 print(df)
