@@ -7,7 +7,14 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-    result = fetch_data()
+    return render_template('index.html')
 
-    return render_template('index.html', data=result)
 
+@app.route('/api/data')
+def get_data():
+    df = fetch_data()
+    return df
+
+
+if __name__ == '__main__':
+    app.run(debug=False)

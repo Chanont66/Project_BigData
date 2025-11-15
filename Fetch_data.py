@@ -45,9 +45,6 @@ def findmean(df):
 
     # หาค่าเฉลี่ย, จัดลำดับ
     result = df.groupby("province_clean")["AQILast.PM25.value"].mean().sort_values()
-    
-    # เปลี่ยนชื่อคอลัมน์
-    result.columns = ["province","PM25"]
 
     return result
 
@@ -72,4 +69,9 @@ def fetch_data():
 
     # หาค่าเฉลี่ย ค่า pm25 ของแต่ละจังหวัด
     df = findmean(df)
+
     return df
+
+
+
+# print(fetch_data())
