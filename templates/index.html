@@ -1,220 +1,149 @@
 <!DOCTYPE html>
 <html lang="th">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ข้อมูลคุณภาพอากาศ PM2.5</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: #f5f5f5;
-            padding: 40px 20px;
-            color: #333;
-        }
-
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 8px;
-            padding: 40px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-        }
-
-        h1 {
-            font-size: 1.8em;
-            font-weight: 600;
-            margin-bottom: 8px;
-            color: #1a1a1a;
-        }
-
-        .subtitle {
-            color: #666;
-            margin-bottom: 20px;
-        }
-
-        .refresh-info {
-            font-size: 0.9em;
-            color: #888;
-            margin-bottom: 30px;
-        }
-
-        .loading {
-            text-align: center;
-            padding: 40px;
-            color: #999;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        thead {
-            border-bottom: 2px solid #e0e0e0;
-        }
-
-        th {
-            padding: 12px;
-            text-align: left;
-            font-weight: 600;
-            font-size: 0.9em;
-            color: #666;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        td {
-            padding: 16px 12px;
-            border-bottom: 1px solid #f0f0f0;
-        }
-
-        tbody tr:hover {
-            background: #fafafa;
-        }
-
-        .rank {
-            color: #999;
-            font-weight: 500;
-        }
-
-        .pm-value {
-            font-weight: 500;
-            padding: 4px 12px;
-            border-radius: 4px;
-            display: inline-block;
-            font-size: 0.95em;
-        }
-
-        .pm-good {
-            background: #e8f5e9;
-            color: #2e7d32;
-        }
-
-        .pm-moderate {
-            background: #fff9c4;
-            color: #f57f17;
-        }
-
-        .pm-unhealthy {
-            background: #ffe0b2;
-            color: #e65100;
-        }
-
-        .pm-very-unhealthy {
-            background: #ffcdd2;
-            color: #c62828;
-        }
-
-        .pm-hazardous {
-            background: #f3e5f5;
-            color: #6a1b9a;
-        }
-
-        .last-update {
-            text-align: center;
-            margin-top: 30px;
-            color: #999;
-            font-size: 0.85em;
-        }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: #f5f5f5;
+        padding: 40px 20px;
+        color: #333;
+      }
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 8px;
+        padding: 40px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      }
+      h1 {
+        font-size: 1.8em;
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: #1a1a1a;
+      }
+      .subtitle {
+        color: #666;
+        margin-bottom: 20px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      thead {
+        border-bottom: 2px solid #e0e0e0;
+      }
+      th {
+        padding: 12px;
+        text-align: left;
+        font-weight: 600;
+        font-size: 0.9em;
+        color: #666;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      td {
+        padding: 16px 12px;
+        border-bottom: 1px solid #f0f0f0;
+      }
+      tbody tr:hover {
+        background: #fafafa;
+      }
+      .rank {
+        color: #999;
+        font-weight: 500;
+      }
+      .pm-value {
+        font-weight: 500;
+        padding: 4px 12px;
+        border-radius: 4px;
+        display: inline-block;
+        font-size: 0.95em;
+      }
+      .pm-good {
+        background: #e8f5e9;
+        color: #2e7d32;
+      }
+      .pm-moderate {
+        background: #fff9c4;
+        color: #f57f17;
+      }
+      .pm-unhealthy {
+        background: #ffe0b2;
+        color: #e65100;
+      }
+      .pm-very-unhealthy {
+        background: #ffcdd2;
+        color: #c62828;
+      }
+      .pm-hazardous {
+        background: #f3e5f5;
+        color: #6a1b9a;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-        <h1>ข้อมูลคุณภาพอากาศ PM2.5</h1>
-        <p class="subtitle">ค่าเฉลี่ย PM2.5 แยกตามจังหวัด</p>
-        <div class="refresh-info">รีเฟรชอัตโนมัติใน <span id="countdown">60</span> วินาที</div>
+      <h1>ข้อมูลคุณภาพอากาศ PM2.5</h1>
+      <p class="subtitle">ค่าเฉลี่ย PM2.5 แยกตามจังหวัด</p>
 
-        <div id="data-content" class="loading">
-            กำลังโหลดข้อมูล...
-        </div>
-        <div class="last-update" id="last-update"></div>
+      <div id="data-content">กำลังโหลดข้อมูล...</div>
     </div>
 
     <script>
-        let countdownTimer = 60;
-        let countdownInterval;
+      function getPMClass(value) {
+          if (value <= 25) return 'pm-good';
+          if (value <= 37) return 'pm-moderate';
+          if (value <= 50) return 'pm-unhealthy';
+          if (value <= 90) return 'pm-very-unhealthy';
+          return 'pm-hazardous';
+      }
 
-        function getPMClass(value) {
-            if (value <= 25) return 'pm-good';
-            if (value <= 37) return 'pm-moderate';
-            if (value <= 50) return 'pm-unhealthy';
-            if (value <= 90) return 'pm-very-unhealthy';
-            return 'pm-hazardous';
-        }
+      // ดึงข้อมูล list of tuples ที่ Flask ส่งมา
+      const dataPM = JSON.parse('{{ data|tojson }}');
+      
 
-        async function loadData() {
-            try {
-                const response = await fetch('/api/data');
-                const data = await response.json();
-                
-                let html = `
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>อันดับ</th>
-                                <th>จังหวัด</th>
-                                <th>ค่าเฉลี่ย PM2.5</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                `;
+      function renderTable() {
+          let html = `
+              <table>
+                  <thead>
+                      <tr>
+                          <th>อันดับ</th>
+                          <th>จังหวัด</th>
+                          <th>ค่าเฉลี่ย PM2.5</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+          `;
 
-                let rank = 1;
-                for (let province in data) {
-                    const pmValue = data[province].toFixed(2);
-                    const pmClass = getPMClass(parseFloat(pmValue));
-                    
-                    html += `
-                        <tr>
-                            <td><span class="rank">${rank}</span></td>
-                            <td>${province}</td>
-                            <td><span class="pm-value ${pmClass}">${pmValue} µg/m³</span></td>
-                        </tr>
-                    `;
-                    rank++;
-                }
+          // วนลูปผ่าน array ด้วย forEach
+          dataPM.forEach((item, index) => {
+              const province = item[0];  // ชื่อจังหวัด
+              const pmValue = parseFloat(item[1]).toFixed(2);  // ค่า PM2.5
+              const pmClass = getPMClass(parseFloat(pmValue));
 
-                html += '</tbody></table>';
-                document.getElementById('data-content').innerHTML = html;
-                
-                const now = new Date();
-                document.getElementById('last-update').innerHTML = 
-                    `อัพเดทล่าสุด: ${now.toLocaleString('th-TH')}`;
-                
-                resetCountdown();
-            } catch (error) {
-                console.error('Error:', error);
-                document.getElementById('data-content').innerHTML = 
-                    '<p class="loading">ไม่สามารถโหลดข้อมูลได้</p>';
-            }
-        }
+              html += `
+                  <tr>
+                      <td><span class="rank">${index + 1}</span></td>
+                      <td>${province}</td>
+                      <td><span class="pm-value ${pmClass}">${pmValue} µg/m³</span></td>
+                  </tr>
+              `;
+          });
 
-        function resetCountdown() {
-            countdownTimer = 60;
-            if (countdownInterval) clearInterval(countdownInterval);
-            
-            countdownInterval = setInterval(() => {
-                countdownTimer--;
-                document.getElementById('countdown').textContent = countdownTimer;
-                
-                if (countdownTimer <= 0) {
-                    loadData();
-                }
-            }, 1000);
-        }
+          html += '</tbody></table>';
+          document.getElementById('data-content').innerHTML = html;
+      }
 
-        // โหลดข้อมูลครั้งแรก
-        loadData();
-        
-        // Auto refresh ทุก 60 วินาที
-        setInterval(loadData, 60000);
+      renderTable();
     </script>
-</body>
+  </body>
 </html>

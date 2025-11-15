@@ -39,12 +39,18 @@ def clean_data(df):
 
 
 # หาค่าเฉลี่ย ค่า pm25 ของแต่ละจังหวัด
-def findmean(df):
+def find_mean(df):
     # แปลง Text ของค่า pm เป็นเลข
     df["AQILast.PM25.value"] = df["AQILast.PM25.value"].astype(float)
 
-    # หาค่าเฉลี่ย, จัดลำดับ
-    result = df.groupby("province_clean")["AQILast.PM25.value"].mean().sort_values()
+    # หาค่าเฉลี่ย
+    result = df.groupby("province_clean")["AQILast.PM25.value"].mean()
+    
+    # จัดลำดับ
+    result = result.sort_values(ascending=False)
+
+    # แปลงเป็น dataframe (เพราะพอผ่าน groupby แล้วมันเป็น series)
+    result = result.reset_index()
 
     return result
 
@@ -65,13 +71,15 @@ def fetch_data():
     df = pd.json_normalize(stations)
 
     # ปรับข้อมูล (แก้ชื่อจังหวัดที่เขียนผิด, ลบช่องว่าง)
-    df = clean_data(df)
+    df_clean = clean_data(df)
 
     # หาค่าเฉลี่ย ค่า pm25 ของแต่ละจังหวัด
-    df = findmean(df)
+    df_mean = find_mean(df_clean)
 
-    return df.to_dict()
+    # # แปลงเป็น list แบบ tuple (list ที่มีลำดับชัดเจน เพราะ js ไม่สนลำดับตอนแสดง)
+    dataList = list(df_mean.itertuples(index=False, name=None))
 
-
+    return dataList
+    # return df_mean.info()
 
 # print(fetch_data())

@@ -1,5 +1,9 @@
 # pip install flask
-from flask import Flask, jsonify, render_template
+# Flask คือ เฟรมเวิร์ก
+# render_template ฟังก์ชันการแสดงผล
+from flask import Flask, render_template
+
+# ไว้ดึงข้อมูล
 from fetch_data import fetch_data
 
 
@@ -7,14 +11,11 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-    return render_template('index.html')
-
-
-@app.route('/api/data')
-def get_data():
     df = fetch_data()
-    return jsonify(df)
+    return render_template('index.html', data=df)
 
 
 if __name__ == '__main__':
     app.run(debug=False)
+
+# python app.py
