@@ -4,20 +4,20 @@
 from flask import Flask, render_template
 
 # ไว้ดึงข้อมูล
-from fetch_data import fetch_data_ListTuple, plot
+from fetch_data import fetch_to_ListTuple
 
 
 app = Flask(__name__)
 
 @app.route('/')
 def index():
-    df = fetch_data_ListTuple()
+    df = fetch_to_ListTuple()
     return render_template('index.html', data=df)
 
 
-@app.route('/graph')
-def graph():
-    return render_template('graph.html' ,data=plot())
+# @app.route('/graph')
+# def graph():
+#     return render_template('graph.html' ,data=plot())
 
 
 if __name__ == '__main__':

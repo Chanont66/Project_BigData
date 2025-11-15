@@ -63,6 +63,9 @@ def find_mean(df):
 
 
 
+
+
+
 # ดึง api dataset และ ปรับข้อมูล 
 # method ---> ให้ dataframe ข้อมูลทั้งหมด
 def fetch_data():
@@ -75,24 +78,32 @@ def fetch_data():
     # แปลง json เป็น dataframe
     df = pd.json_normalize(stations)
 
-    # ปรับข้อมูล (แก้ชื่อจังหวัดที่เขียนผิด, ลบช่องว่าง)
-    df_clean = clean_data(df)
-
-    # หาค่าเฉลี่ย ค่า pm25 ของแต่ละจังหวัด
-    df_mean = find_mean(df_clean)
-
     # print(stations[0].keys()) # ดูแถวแรกว่ามีกี่คอลัมน์
-    return df_mean
+    return df
 
 # print(fetch_data())
 
 
 
+
+# คลีนแล้ว คิด mean ข้อมูล
+# method ---> ให้คอลัม province_clean, AQILast.PM25.value
+def convert_data(df):
+    df_clean = clean_data(df)
+    df_mean = find_mean(df_clean)
+    return df_mean
+
+# print(convert_data(fetch_data()))
+
+
+
+
 # แปลงเป็น list แบบ tuple ไช้ใน app
 # method ---> ให้ list แบบ tuple
-def fetch_data_ListTuple():
+def fetch_to_ListTuple():
+
     # ขอข้อมูลที่คลีนแล้ว คิด mean แล้ว
-    fetch_D = fetch_data()
+    fetch_D = convert_data(fetch_data())
 
     # แปลงเป็น list แบบ tuple (list ที่มีลำดับชัดเจน เพราะ js ไม่สนลำดับตอนแสดง)
     dataList = list(fetch_D.itertuples(index=False, name=None))
@@ -165,29 +176,29 @@ def scatterplot():
 
 
 
-# วาดกราฟกล่อง
-# method ---> ให้รูป box ไปในไฟล์ pic
-def boxplot():
-    # ฟอนต์ไว้เขียน ภาษาไทย
-    plt.rcParams['font.family'] = 'Tahoma'
+# # วาดกราฟกล่อง
+# # method ---> ให้รูป box ไปในไฟล์ pic
+# def boxplot():
+#     # ฟอนต์ไว้เขียน ภาษาไทย
+#     plt.rcParams['font.family'] = 'Tahoma'
 
-    # ขอข้อมูลที่คลีนแล้ว คิด mean แล้ว
-    fetch_D = fetch_data()
+#     # ขอข้อมูลที่คลีนแล้ว คิด mean แล้ว
+#     fetch_D = fetch_data()
     
-    # เอา dataframe มาวาดกราฟแบบง่ายๆ
-    df_clean.boxplot(column='AQILast.PM25.value', by='province_clean', figsize=(20, 10))
+#     # เอา dataframe มาวาดกราฟแบบง่ายๆ
+#     df_clean.boxplot(column='AQILast.PM25.value', by='province_clean', figsize=(20, 10))
 
-    # ชื่อกราฟ, แกน x, แกน y
-    plt.title("ค่า PM2.5 เฉลี่ยตามจังหวัด")
-    plt.ylabel("ค่า PM2.5 (µg/m³)")
+#     # ชื่อกราฟ, แกน x, แกน y
+#     plt.title("ค่า PM2.5 เฉลี่ยตามจังหวัด")
+#     plt.ylabel("ค่า PM2.5 (µg/m³)")
 
-    # หมุนชื่อจังหวัดให้ไม่ชนกัน
-    plt.xticks(rotation=90)
+#     # หมุนชื่อจังหวัดให้ไม่ชนกัน
+#     plt.xticks(rotation=90)
 
-    # จัดระยะให้ไม่ทับกัน
-    plt.tight_layout()
+#     # จัดระยะให้ไม่ทับกัน
+#     plt.tight_layout()
 
-    # save graph (ถ้าข้อมูลอัพเดท มันจะทับรูปเก่า)
-    plt.savefig('pic/pm25_boxplot.png')
+#     # save graph (ถ้าข้อมูลอัพเดท มันจะทับรูปเก่า)
+#     plt.savefig('pic/pm25_boxplot.png')
 
-boxplot()
+# boxplot()
