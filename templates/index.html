@@ -43,7 +43,7 @@
       }
       th {
         padding: 12px;
-        text-align: left;
+        text-align: center;
         font-weight: 600;
         font-size: 0.9em;
         color: #666;
@@ -53,6 +53,11 @@
       td {
         padding: 16px 12px;
         border-bottom: 1px solid #f0f0f0;
+        text-align: center;
+      }
+      td:nth-child(2) {
+        text-align: left;
+        padding-left: 220px;
       }
       tbody tr:hover {
         background: #fafafa;
@@ -110,7 +115,7 @@
       // ดึงข้อมูล list of tuples ที่ Flask ส่งมา
       const dataPM = JSON.parse('{{ data|tojson }}');
       
-
+      
       function renderTable() {
           let html = `
               <table>
