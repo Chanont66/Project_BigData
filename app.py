@@ -1,5 +1,5 @@
 # pip install flask
-from flask import Flask, render_template
+from flask import Flask, jsonify, render_template
 from fetch_data import fetch_data
 
 
@@ -13,7 +13,7 @@ def index():
 @app.route('/api/data')
 def get_data():
     df = fetch_data()
-    return df
+    return jsonify(df)
 
 
 if __name__ == '__main__':

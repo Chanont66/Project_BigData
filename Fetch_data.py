@@ -70,7 +70,7 @@ def fetch_data():
     # หาค่าเฉลี่ย ค่า pm25 ของแต่ละจังหวัด
     df = findmean(df)
 
-    return df
+    return df.to_dict()
 
 
 
