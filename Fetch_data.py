@@ -39,8 +39,6 @@ def clean_data(df):
 
 
 
-
-
 # หาค่าเฉลี่ย ค่า pm25 ของแต่ละจังหวัด 
 # method ---> ให้ dataframe province_clean, AQILast.PM25.value
 def find_mean(df):
@@ -54,12 +52,14 @@ def find_mean(df):
     result = result.sort_values(ascending=False)
 
     # แปลงเป็น dataframe (เพราะพอผ่าน groupby แล้วมันเป็น series)
-    result = result.reset_index()
+    mean = result.reset_index()
 
-    return result
+    return mean
 
 
-# print(findmean(clean_data(df)))
+
+
+
 
 
 
@@ -87,7 +87,7 @@ def fetch_data():
 
 
 # คลีนแล้ว คิด mean ข้อมูล
-# method ---> ให้คอลัม province_clean, AQILast.PM25.value
+# method ---> ให้ dataframe province_clean, AQILast.PM25.value
 def convert_data(df):
     df_clean = clean_data(df)
     df_mean = find_mean(df_clean)
@@ -115,6 +115,12 @@ def fetch_to_ListTuple():
 
 
 
+
+
+
+
+
+
 # วาดกราฟแท่ง
 # method ---> ให้รูป bar ไปในไฟล์ pic
 def barplot():
@@ -122,7 +128,7 @@ def barplot():
     plt.rcParams['font.family'] = 'Tahoma'
 
     # ขอข้อมูลที่คลีนแล้ว คิด mean แล้ว
-    fetch_D = fetch_data()
+    fetch_D = convert_data(fetch_data())
     
     # เอา dataframe มาวาดกราฟแบบง่ายๆ
     fetch_D.set_index("province_clean")['AQILast.PM25.value'].plot.bar(figsize=(20, 10))
@@ -152,7 +158,7 @@ def scatterplot():
     plt.rcParams['font.family'] = 'Tahoma'
 
     # ขอข้อมูลที่คลีนแล้ว คิด mean แล้ว
-    fetch_D = fetch_data()
+    fetch_D = convert_data(fetch_data())
     
     # เอา dataframe มาวาดกราฟแบบง่ายๆ
     fetch_D.plot.scatter(x='province_clean', y='AQILast.PM25.value', figsize=(20, 10))
@@ -176,15 +182,18 @@ def scatterplot():
 
 
 
-# # วาดกราฟกล่อง
-# # method ---> ให้รูป box ไปในไฟล์ pic
+# วาดกราฟกล่อง (ถ้าจังหวัดไหนมีหลายสถานีจะเห็น box, ถ้ามีสถานีเดียว จะเห็นแค่เส้นหรือจุด)
+# 
+# method ---> ให้รูป box ไปในไฟล์ pic
 # def boxplot():
 #     # ฟอนต์ไว้เขียน ภาษาไทย
 #     plt.rcParams['font.family'] = 'Tahoma'
 
-#     # ขอข้อมูลที่คลีนแล้ว คิด mean แล้ว
+#     # ขอข้อมูลดิบ
 #     fetch_D = fetch_data()
-    
+#     df_clean = clean_data(fetch_D)
+#     df_clean["AQILast.PM25.value"] = df_clean["AQILast.PM25.value"].astype(float)
+
 #     # เอา dataframe มาวาดกราฟแบบง่ายๆ
 #     df_clean.boxplot(column='AQILast.PM25.value', by='province_clean', figsize=(20, 10))
 
