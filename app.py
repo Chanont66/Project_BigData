@@ -4,14 +4,14 @@
 from flask import Flask, render_template
 
 # ไว้ดึงข้อมูล
-from fetch_data import fetch_data
+from fetch_data import fetch_data_ListTuple
 
 
 app = Flask(__name__)
 
 @app.route('/')
 def index():
-    df = fetch_data()
+    df = fetch_data_ListTuple()
     return render_template('index.html', data=df)
 
 

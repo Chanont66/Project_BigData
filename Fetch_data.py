@@ -59,7 +59,7 @@ def find_mean(df):
 
 
 
-# ดึง api dataset
+# ดึง api dataset และ ปรับข้อมูล
 def fetch_data():
     url = "http://air4thai.pcd.go.th/services/getNewAQI_JSON.php"
     data = requests.get(url).json()
@@ -76,10 +76,47 @@ def fetch_data():
     # หาค่าเฉลี่ย ค่า pm25 ของแต่ละจังหวัด
     df_mean = find_mean(df_clean)
 
-    # # แปลงเป็น list แบบ tuple (list ที่มีลำดับชัดเจน เพราะ js ไม่สนลำดับตอนแสดง)
-    dataList = list(df_mean.itertuples(index=False, name=None))
-
-    return dataList
-    # return df_mean.info()
+    return df_mean
 
 # print(fetch_data())
+
+
+
+def fetch_data_ListTuple():
+    # ขอข้อมูลที่คลีนแล้ว
+    fetch_D = fetch_data()
+
+    # แปลงเป็น list แบบ tuple (list ที่มีลำดับชัดเจน เพราะ js ไม่สนลำดับตอนแสดง)
+    dataList = list(fetch_D.itertuples(index=False, name=None))
+
+    return dataList
+
+
+# print(fetch_data_ListTuple())
+
+
+
+# pip install matplotlib
+# ใช้วาดกราฟ
+import matplotlib.pyplot as plt
+
+
+def plot():
+    plt.rcParams['font.family'] = 'Tahoma'
+
+    # ขอข้อมูลที่คลีนแล้ว
+    fetch_D = fetch_data()
+    
+    # วาดกราฟแบบง่ายๆ
+    fetch_D.set_index("province_clean")['AQILast.PM25.value'].plot.bar(figsize=(20, 10))
+
+    plt.title("ค่า PM2.5 เฉลี่ยตามจังหวัด (เฉลี่ยสถานี)")  # ชื่อกราฟ
+    plt.xlabel("จังหวัด")
+    plt.ylabel("ค่า PM2.5 (µg/m³)")
+
+    plt.xticks(rotation=90, ha='right')  # หมุนชื่อจังหวัดให้ไม่ชนกัน
+
+    plt.tight_layout()  # จัดระยะให้ไม่ทับกัน
+    plt.show()
+ 
+plot()

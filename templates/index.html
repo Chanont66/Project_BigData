@@ -93,6 +93,38 @@
         background: #f3e5f5;
         color: #6a1b9a;
       }
+      .pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        margin-top: 30px;
+        padding-top: 20px;
+        border-top: 1px solid #e0e0e0;
+      }
+      .pagination button {
+        padding: 8px 16px;
+        border: 1px solid #ddd;
+        background: white;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 0.9em;
+        transition: all 0.2s;
+      }
+      .pagination button:hover:not(:disabled) {
+        background: #f5f5f5;
+        border-color: #999;
+      }
+      .pagination button:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+      }
+      .pagination .page-info {
+        color: #666;
+        font-size: 0.9em;
+        min-width: 120px;
+        text-align: center;
+      }
     </style>
   </head>
   <body>
@@ -101,9 +133,13 @@
       <p class="subtitle">ค่าเฉลี่ย PM2.5 แยกตามจังหวัด</p>
 
       <div id="data-content">กำลังโหลดข้อมูล...</div>
+      <div class="pagination" id="pagination"></div>
     </div>
 
     <script>
+      let currentPage = 1;
+      const itemsPerPage = 15;
+
       function getPMClass(value) {
           if (value <= 25) return 'pm-good';
           if (value <= 37) return 'pm-moderate';
@@ -114,9 +150,13 @@
 
       // ดึงข้อมูล list of tuples ที่ Flask ส่งมา
       const dataPM = JSON.parse('{{ data|tojson }}');
-      
+      const totalPages = Math.ceil(dataPM.length / itemsPerPage);
       
       function renderTable() {
+          const startIndex = (currentPage - 1) * itemsPerPage;
+          const endIndex = startIndex + itemsPerPage;
+          const pageData = dataPM.slice(startIndex, endIndex);
+
           let html = `
               <table>
                   <thead>
@@ -130,14 +170,15 @@
           `;
 
           // วนลูปผ่าน array ด้วย forEach
-          dataPM.forEach((item, index) => {
+          pageData.forEach((item, index) => {
               const province = item[0];  // ชื่อจังหวัด
               const pmValue = parseFloat(item[1]).toFixed(2);  // ค่า PM2.5
               const pmClass = getPMClass(parseFloat(pmValue));
+              const rank = startIndex + index + 1;
 
               html += `
                   <tr>
-                      <td><span class="rank">${index + 1}</span></td>
+                      <td><span class="rank">${rank}</span></td>
                       <td>${province}</td>
                       <td><span class="pm-value ${pmClass}">${pmValue} µg/m³</span></td>
                   </tr>
@@ -146,6 +187,37 @@
 
           html += '</tbody></table>';
           document.getElementById('data-content').innerHTML = html;
+          renderPagination();
+      }
+
+      function renderPagination() {
+          const html = `
+              <button onclick="changePage('first')" ${currentPage === 1 ? 'disabled' : ''}>หน้าแรก</button>
+              <button onclick="changePage('prev')" ${currentPage === 1 ? 'disabled' : ''}>ก่อนหน้า</button>
+              <span class="page-info">หน้า ${currentPage} จาก ${totalPages}</span>
+              <button onclick="changePage('next')" ${currentPage === totalPages ? 'disabled' : ''}>ถัดไป</button>
+              <button onclick="changePage('last')" ${currentPage === totalPages ? 'disabled' : ''}>หน้าสุดท้าย</button>
+          `;
+          document.getElementById('pagination').innerHTML = html;
+      }
+
+      function changePage(action) {
+          switch(action) {
+              case 'first':
+                  currentPage = 1;
+                  break;
+              case 'prev':
+                  if (currentPage > 1) currentPage--;
+                  break;
+              case 'next':
+                  if (currentPage < totalPages) currentPage++;
+                  break;
+              case 'last':
+                  currentPage = totalPages;
+                  break;
+          }
+          renderTable();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
       }
 
       renderTable();
