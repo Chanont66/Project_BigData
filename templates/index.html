@@ -23,6 +23,7 @@
         border-radius: 8px;
         padding: 40px;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        position: relative;
       }
       h1 {
         font-size: 1.8em;
@@ -33,6 +34,34 @@
       .subtitle {
         color: #666;
         margin-bottom: 20px;
+      }
+      .graph-link {
+        position: absolute;
+        top: 40px;
+        right: 40px;
+      }
+      .graph-link a {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 10px 20px;
+        background: #007bff;
+        color: white;
+        text-decoration: none;
+        border-radius: 6px;
+        font-size: 0.9em;
+        font-weight: 500;
+        transition: all 0.2s;
+        box-shadow: 0 2px 4px rgba(0, 123, 255, 0.2);
+      }
+      .graph-link a:hover {
+        background: #0056b3;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
+      }
+      .graph-link a::before {
+        content: "📊";
+        font-size: 1.1em;
       }
       table {
         width: 100%;
@@ -125,10 +154,23 @@
         min-width: 120px;
         text-align: center;
       }
+      
+      /* Responsive */
+      @media (max-width: 600px) {
+        .graph-link {
+          position: static;
+          margin-bottom: 20px;
+          text-align: right;
+        }
+      }
     </style>
   </head>
   <body>
     <div class="container">
+      <div class="graph-link">
+        <a href="/graph">ดูข้อมูลในรูปแบบกราฟ</a>
+      </div>
+      
       <h1>ข้อมูลคุณภาพอากาศ PM2.5</h1>
       <p class="subtitle">ค่าเฉลี่ย PM2.5 แยกตามจังหวัด</p>
 

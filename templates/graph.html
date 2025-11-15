@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>กราฟค่า PM2.5</title>
+    <style>
+        body {
+            font-family: 'Tahoma', sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .graph-container {
+            background-color: white;
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 1200px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+        img {
+            width: 100%;
+            height: auto;
+            display: block;
+            margin: 10px 0;
+        }
+        .back-link {
+            text-align: center;
+            margin: 20px;
+        }
+        a {
+            color: #007bff;
+            text-decoration: none;
+            font-size: 18px;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h1>กราฟแสดงค่า PM2.5 เฉลี่ยแต่ละจังหวัด</h1>
+    
+    <div class="graph-container">
+        <h2>กราฟแท่ง (Bar Chart)</h2>
+        <img src="{{ url_for('static', filename='pic/pm25_barplot.png') }}" alt="Bar Plot">
+    </div>
+    
+    <div class="graph-container">
+        <h2>กราฟการกระจาย (Scatter Plot)</h2>
+        <img src="{{ url_for('static', filename='pic/pm25_scatterplot.png') }}" alt="Scatter Plot">
+    </div>
+    
+    <div class="back-link">
+        <a href="/">← กลับไปหน้าแรก</a>
+    </div>
+</body>
+</html>

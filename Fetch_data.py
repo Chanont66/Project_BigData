@@ -1,6 +1,10 @@
 # pip install pandas
 # pip install requests
 # # pip install matplotlib
+import matplotlib
+matplotlib.use('Agg') # 
+
+
 import pandas as pd
 import requests
 import matplotlib.pyplot as plt # ใช้วาดกราฟ
@@ -145,7 +149,7 @@ def barplot():
     plt.tight_layout()
 
     # save graph (ถ้าข้อมูลอัพเดท มันจะทับรูปเก่า)
-    plt.savefig('pic/pm25_barplot.png')
+    plt.savefig('static/pic/pm25_barplot.png')
 
 # barplot()
 
@@ -175,39 +179,6 @@ def scatterplot():
     plt.tight_layout()
 
     # save graph (ถ้าข้อมูลอัพเดท มันจะทับรูปเก่า)
-    plt.savefig('pic/pm25_scatterplot.png')
+    plt.savefig('static/pic/pm25_scatterplot.png')
 
 # scatterplot()
-
-
-
-
-# วาดกราฟกล่อง (ถ้าจังหวัดไหนมีหลายสถานีจะเห็น box, ถ้ามีสถานีเดียว จะเห็นแค่เส้นหรือจุด)
-# 
-# method ---> ให้รูป box ไปในไฟล์ pic
-# def boxplot():
-#     # ฟอนต์ไว้เขียน ภาษาไทย
-#     plt.rcParams['font.family'] = 'Tahoma'
-
-#     # ขอข้อมูลดิบ
-#     fetch_D = fetch_data()
-#     df_clean = clean_data(fetch_D)
-#     df_clean["AQILast.PM25.value"] = df_clean["AQILast.PM25.value"].astype(float)
-
-#     # เอา dataframe มาวาดกราฟแบบง่ายๆ
-#     df_clean.boxplot(column='AQILast.PM25.value', by='province_clean', figsize=(20, 10))
-
-#     # ชื่อกราฟ, แกน x, แกน y
-#     plt.title("ค่า PM2.5 เฉลี่ยตามจังหวัด")
-#     plt.ylabel("ค่า PM2.5 (µg/m³)")
-
-#     # หมุนชื่อจังหวัดให้ไม่ชนกัน
-#     plt.xticks(rotation=90)
-
-#     # จัดระยะให้ไม่ทับกัน
-#     plt.tight_layout()
-
-#     # save graph (ถ้าข้อมูลอัพเดท มันจะทับรูปเก่า)
-#     plt.savefig('pic/pm25_boxplot.png')
-
-# boxplot()

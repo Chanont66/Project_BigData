@@ -4,7 +4,7 @@
 from flask import Flask, render_template
 
 # ไว้ดึงข้อมูล
-from fetch_data import fetch_to_ListTuple
+from fetch_data import fetch_to_ListTuple, barplot, scatterplot
 
 
 app = Flask(__name__)
@@ -15,9 +15,11 @@ def index():
     return render_template('index.html', data=df)
 
 
-# @app.route('/graph')
-# def graph():
-#     return render_template('graph.html' ,data=plot())
+@app.route('/graph')
+def graph():
+    barplot()
+    scatterplot()
+    return render_template('graph.html')
 
 
 if __name__ == '__main__':
