@@ -1,19 +1,10 @@
-# !pip install pandas
+# pip install pandas
+# pip install requests
 import pandas as pd
 import requests
 
-url = "http://air4thai.pcd.go.th/services/getNewAQI_JSON.php"
-data = requests.get(url).json()
 
-# ข้อมูลอยู่ใน stations ต้องเข้าไปก่อน
-stations = data['stations']
-
-# แปลง json เป็น dataframe
-df = pd.json_normalize(stations)
-
-
-
-# ปรับข้อมูล (แก้ชื่อจังหวัดที่เขียนผิด, ลบช่องว่าง, แปลง Text เป็นเลข)
+# ปรับข้อมูล (แก้ชื่อจังหวัดที่เขียนผิด, ลบช่องว่าง)
 def clean_data(df):
     # แยกข้อความด้วย , จะได้ list
     province_split = df['areaEN'].str.split(', ') 
@@ -36,9 +27,6 @@ def clean_data(df):
 
     # ใช้ replace แก้ชื่อที่เขียนมาแปลกๆ
     df["province_clean"] = province_clean.replace(province_check)
-
-    # แปลง Text ของค่า pm เป็นเลข
-    df["AQILast.PM25.value"] = df["AQILast.PM25.value"].astype(float)
     
     # (เช็ตว่าครบ 77 จังหวัดไหม?)
     # print(df['province_clean'].unique())
@@ -52,8 +40,36 @@ def clean_data(df):
 
 # หาค่าเฉลี่ย ค่า pm25 ของแต่ละจังหวัด
 def findmean(df):
-    result = df.groupby('province_clean')['AQILast.PM25.value'].mean().sort_values()
+    # แปลง Text ของค่า pm เป็นเลข
+    df["AQILast.PM25.value"] = df["AQILast.PM25.value"].astype(float)
+
+    # หาค่าเฉลี่ย, จัดลำดับ
+    result = df.groupby("province_clean")["AQILast.PM25.value"].mean().sort_values()
+    
+    # เปลี่ยนชื่อคอลัมน์
+    result.columns = ["province","PM25"]
+
     return result
 
 
 # print(findmean(clean_data(df)))
+
+
+
+# ดึง api dataset
+def fetch_data():
+    url = "http://air4thai.pcd.go.th/services/getNewAQI_JSON.php"
+    data = requests.get(url).json()
+
+    # ข้อมูลอยู่ใน stations ต้องเข้าไปก่อน
+    stations = data['stations']
+
+    # แปลง json เป็น dataframe
+    df = pd.json_normalize(stations)
+
+    # ปรับข้อมูล (แก้ชื่อจังหวัดที่เขียนผิด, ลบช่องว่าง)
+    df = clean_data(df)
+
+    # หาค่าเฉลี่ย ค่า pm25 ของแต่ละจังหวัด
+    df = findmean(df)
+    return df
